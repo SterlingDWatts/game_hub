@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Game Hub | A place to find new board games! Search from an extensive database of games.">
+    <title>Game Hub</title>
+    <link rel="stylesheet" type="text/css" href="reset.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="images/portfolio-favicon.ico">
+    <script src="https://kit.fontawesome.com/baf761b7d4.js"></script>
+</head>
+<body>
+    <nav role="navigation">Nav</nav>
+    <main role="main">
+        <header role="banner">
+            <h1>Game Hub</h1>
+        </header>
+
+        <section class="Search">
+            <form action="submit">
+                <label for="game-input">Game</label>
+                <input type="text" id="game-input" placeholder="Scythe" required>
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </section>
+
+        <section class="links">
+            <span class="fa-stack fa-2x">
+                <i class="far fa-square fa-stack-2x"></i>
+                <i class="fas fa-child fa-stack-1x"></i>
+            </span>
+            <span class="fa-stack fa-2x">
+                <i class="far fa-square fa-stack-2x"></i>
+                <i class="fas fa-hourglass-half fa-stack-1x"></i>
+            </span>
+            <span class="fa-stack fa-2x">
+                <i class="far fa-square fa-stack-2x"></i>
+                <i class="fas fa-users fa-stack-1x"></i>
+            </span>
+        </section>
+
+        <section class="results hidden">
+            <ul></ul>
+        </section>
+            
+    </main>
+    <footer role="content-info">Footer</footer>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>  
+    <script src="script.js"></script>
+</body>
+</html>
