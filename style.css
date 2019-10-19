@@ -34,6 +34,21 @@ section:nth-child(even) {
   background-color: #ddd;
 }
 
+.below {
+  position: relative;
+  top: 1.5em;
+}
+
+.results {
+  padding: 1em;
+  text-align: left;
+}
+
+.results-item {
+  padding: 1em;
+  border-bottom: 1px solid black;
+}
+
 .hidden {
   display: none;
 }
