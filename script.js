@@ -4,7 +4,7 @@ const ATLAS_SEARCH_URL = 'https://www.boardgameatlas.com/api';
 const ATLAS_CLIENT_ID = 'client_id=wGoq3sNRE5';
 const BGG_SEARCH_URL = 'https://www.boardgamegeek.com/xmlapi2';
 const $hotness = $('.hotness');
-const $viewTheHotness = $('.view-the-hotness');
+const $theHotnessButton = $('button.the-hotness');
 const $results = $('.results');
 const $spinner = $('.spinner-div');
 
@@ -34,7 +34,7 @@ function displayTheHotness(responseText) {
                 <img class='hotness-thumb left-float' src='${thumb}' width='80' alt='${name} box artwork'>
                 <div>
                     <a href='' class='game'>
-                        ${name}<span class='medium'> | ${yearPublished}</span>
+                        ${name}<span class='medium'> (${yearPublished})</span>
                     </a>
                     <br>
                     <span class='small'>${yearPublished} | </span><span>Rank: ${rank}</span>
@@ -65,13 +65,14 @@ function fetchTheHotness() {
 function shrinkTheSearchArea() {
     $('header').addClass('one-point-five-em');
     $('form, .search').addClass('small-padding');
-    $viewTheHotness.removeClass('hidden');
+    $theHotnessButton.removeClass('hidden');
+    // $('.back').removeClass('hidden');
     $hotness.addClass('hidden');
-    $('.buttons').removeClass('inline-block');
-    $('button').html('Search')
+    $('.search-button').html('Search');
     $('.search, .linen-background').addClass('initial-height');
     $('header').addClass('no-padding');
     $('label').addClass('hidden');
+    $('.search, .search div').addClass('flex-large');
 }
 
 function displayGameInfo(game) {
@@ -256,12 +257,12 @@ function displaySearchResults(responseText) {
     $results.html('<ul></ul>');
 
     for (let i = 0; i < orderByPopularity.length; i++) {
+        const index = orderByPopularity[i].index;
+        const name = games[index].getElementsByTagName('name')[0].getAttribute('value');
+        const aveRating = parseFloat(games[index].getElementsByTagName('average')[0].getAttribute('value')).toFixed(2);
+        const id = games[index].getAttribute('id');
         try {
-            const index = orderByPopularity[i].index;
-            const name = games[index].getElementsByTagName('name')[0].getAttribute('value');
             const thumb = games[index].getElementsByTagName('thumbnail')[0].innerHTML;
-            const aveRating = parseFloat(games[index].getElementsByTagName('average')[0].getAttribute('value')).toFixed(2);
-            const id = games[index].getAttribute('id');
             $('.results ul').append(
                 `<li class='results-item' data-id='${id}'>
                     <img src='${thumb}'  width='80' alt='${name} box artwork'>
@@ -276,7 +277,16 @@ function displaySearchResults(responseText) {
             );
         }
         catch {
-            console.log(`No box art on game # ${i + 1}`)
+            $('.results ul').append(
+                `<li class='results-item one-point-five-em' data-id='${id}'>
+                    <div class='eighty-pixel-square'><i class="fas fa-chess"></i></div>
+                    <div>
+                        <a href='' class='game'>${name}</a>
+                        <br>
+                        <span>Average Rating: ${aveRating}</span>
+                    </div>
+                </li>`
+            );
         }
     }
 
@@ -349,7 +359,7 @@ function arrayToLiHtmlString(anArray) {
 function handleClickGame() {
     // listen for click on game and run functions to display info about game
 
-    $results.on('click', '.results-item', function(e) {
+    $results.on('click', '.results-item, .expansion', function(e) {
         e.preventDefault();
         getGameInfo($(this).attr('data-id'));
     })
@@ -366,7 +376,7 @@ function familyIdsToString(htmlCollection) {
     return idsString;
 }
 
-function displayFamilyResults(responseText, family, description) {
+function displayFamilyResults(responseText, family, description, thumb) {
     //
 
     const xmlDoc = toXMLDoc(responseText);
@@ -377,35 +387,47 @@ function displayFamilyResults(responseText, family, description) {
     $spinner.addClass('hidden');
 
     $results.html(
-        `<h2>${family}</h2>
-        <p>${description}</p>
+        `<h2 class='family-header'>${family}</h2>
+        <p class='left-justified'>${description}</p>
         <ul></ul>`
     );
 
     for (let i = 0; i < orderByPopularity.length; i++) {
+        const index = orderByPopularity[i].index;
+        const name = games[index].getElementsByTagName('name')[0].getAttribute('value');
+        const aveRating = games[index].getElementsByTagName('average')[0].getAttribute('value');
+        const id = games[index].getAttribute('id');
         try {
-            const index = orderByPopularity[i].index;
-            const name = games[index].getElementsByTagName('name')[0].getAttribute('value');
             const thumb = games[index].getElementsByTagName('thumbnail')[0].innerHTML;
-            const aveRating = games[index].getElementsByTagName('average')[0].getAttribute('value');
-            const id = games[index].getAttribute('id');
+            
             $('.results ul').append(
-                `<li class="results-item" data-id='${id}'>
-                    <img src='${thumb}' height='75' alt='${name} box artwork'>
-                    <a href='' class='game'>${name}</a>
-                    <br>
-                    <span>Average Rating: ${aveRating}</span>
+                `<li class='results-item one-point-five-em' data-id='${id}'>
+                    <img src='${thumb}' width='80' alt='${name} box artwork'>
+                    <div>
+                        <a href='' class='game'>${name}</a>
+                        <br>
+                        <span>Average Rating: ${aveRating}</span>
+                    </div>
                 </li>`
             );
         }
         catch {
-            console.log(`No box art on game # ${i + 1}`);
+            $('.results ul').append(
+                `<li class='results-item one-point-five-em' data-id='${id}'>
+                    <div class='eighty-pixel-square'><i class="fas fa-chess"></i></div>
+                    <div>
+                        <a href='' class='game'>${name}</a>
+                        <br>
+                        <span>Average Rating: ${aveRating}</span>
+                    </div>
+                </li>`
+            );
         }
     }
     window.scrollTo(0,0);
 }
 
-function displayWithoutPictures(responseText, family, description) {
+function displayWithoutPictures(responseText, family, description, thumb) {
     //
 
     const xmlDoc = toXMLDoc(responseText);
@@ -414,7 +436,7 @@ function displayWithoutPictures(responseText, family, description) {
     $spinner.addClass('hidden')
 
     $results.html(
-        `<h2>${family}</h2>
+        `<h2 class='family-header'>${family}</h2>
         <p>${description}</p>
         <ul></ul>`
     );
@@ -462,7 +484,6 @@ function getFamilies(id) {
     // 
 
     const url = BGG_SEARCH_URL + '/family?id=' + id;
-    console.log(`fetching family: ${id} from ${url}`)
 
     $spinner.removeClass('hidden');
     $spinner.css('top', window.pageYOffset)
@@ -491,6 +512,61 @@ function handleClickFamily() {
     })
 }
 
+function displayTheFullHotness(responseText) {
+    //
+
+    const xmlDoc = toXMLDoc(responseText);
+    const games = xmlDoc.getElementsByTagName('item');
+
+    $spinner.addClass('hidden');
+    $results.html('<ul></ul>');
+
+    for (let i = 0; i < games.length; i++) {
+        const name = games[i].getElementsByTagName('name')[0].getAttribute('value');
+        const thumb = games[i].getElementsByTagName('thumbnail')[0].getAttribute('value');
+        const rank = i + 1;
+        const id = games[i].getAttribute('id');
+        const yearPublished = games[i].getElementsByTagName('yearpublished')[0].getAttribute('value');
+
+        $('.results ul').append(
+            `<li class='results-item' data-id='${id}'>
+                <img class='hotness-thumb left-float' src='${thumb}' width='80' alt='${name} box artwork'>
+                <div>
+                    <a href='' class='game'>
+                        ${name}<span class='medium'> | ${yearPublished}</span>
+                    </a>
+                    <br>
+                    <span class='small'>${yearPublished} | </span><span>Rank: ${rank}</span>
+                </div>
+            </li>`
+        )
+    }
+}
+
+function fetchTheFullHotness() {
+    let url = BGG_SEARCH_URL + '/hot?TYPE=boardgame'
+
+    fetch(url)
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(responseText => {
+            displayTheFullHotness(responseText);
+        })
+        .catch(e => console.log(e))
+}
+
+function handleClickTheHotnessButton() {
+    //
+
+    $('button.the-hotness').on('click', function(e) {
+        fetchTheFullHotness();
+    })
+}
+
 function loadStartFunctions() {
     // run event listeners and starting functions
 
@@ -499,6 +575,7 @@ function loadStartFunctions() {
     handleSubmitSearch();
     handleClickGame();
     handleClickFamily();
+    handleClickTheHotnessButton();
 }
 
 $(loadStartFunctions());

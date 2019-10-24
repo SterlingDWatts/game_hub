@@ -20,21 +20,31 @@
                 <header>
                     <h1>Game Hub</h1>
                 </header>
-                <form action="submit">
-                    <h2 class="meduim hidden">Game Hub</h2>
-                    <label for="game-input">Game</label>
-                    <input class="search-bar-input" type="text" id="game-input" placeholder="example: Risk" required>
-                    <div class="buttons inline-block">
-                        <button class="search-button" type="submit">
-                            <i class="fas fa-search"></i>
-                        </button>
-                        <div class="view-the-hotness inline-block hidden">The Hotness</div>
-                    </div>
-                </form>
+                <div>
+                    <form action="submit">
+                        <h2 class="meduim hidden">Game Hub</h2>
+                        <label for="game-input">Game</label>
+                        <input class="search-bar-input" type="text" id="game-input" placeholder="example: Risk" required>
+                        <div class="buttons inline-block">
+                            <button class="search-button" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <button type="submit" class="back hidden">
+                        Back
+                    </button>
+                    <button type="submit" class="the-hotness inline-block hidden">
+                        The Hotness
+                    </button>
+                    </a>
+                </div>
             </section>
 
             <section class="hotness">
-                <h2>The Hotness:</h2>
+                <h2>
+                    The Hotness
+                </h2>
                 <ul class="hotness-list"></ul>
             </section>
 
@@ -62,6 +72,8 @@
             <h2 class="hidden">Results</h2>
             <ul></ul>
         </section>
+
+        
             
     </main>
 

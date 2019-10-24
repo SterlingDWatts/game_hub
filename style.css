@@ -9,10 +9,6 @@ html {
 html, body, main {
   height: 100%;
 }
-
-.linen-background {
-  min-height: 100%;
-}
   
 body {
   font-family: "Roboto", sans-serif; 
@@ -42,6 +38,7 @@ nav {
 }
 
 .linen-background {
+  min-height: 100%;
   background-image: url(images/linen-background.jpg);
   background-size: cover;
   background-position: center;
@@ -54,13 +51,20 @@ nav {
 
 header {
   padding: 6% 0 0;
-  font-family: 'Permanent Marker', cursive;
+  font-family: 'Montserrat Subrayada', sans-serif;
   font-size: 3em;
   line-height: 1;
 }
   
 section {
   padding: 6% 0 0;
+}
+
+.search-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
 }
 
 form {
@@ -79,7 +83,7 @@ form {
   margin-bottom: 5px;
   background-image: url(images/cardboard-textures-11.jpg);
   background-size: cover;
-  width: 55%;
+  max-width: 150px;
   font-size: 18px;
 }
 
@@ -110,7 +114,7 @@ button, .view-the-hotness {
 }
 
 .results-item, .hotness-list-item {
-  padding: 0 1em .5em;
+  padding: .5em 1em;
   align-items: center;
 }
 
@@ -151,6 +155,10 @@ button, .view-the-hotness {
   margin: 0 auto;
 }
 
+.eighty-pixel-square {
+  width: 80px;
+}
+
 ul div {
   text-align: center;
   width: 78%;
@@ -166,8 +174,9 @@ ul div {
   text-align: left;
 }
 
-h2.game-name {
-  font-size: 3em;
+h2.game-name, h2.family-header {
+  font-size: 2em;
+  font-family: 'Montserrat Subrayada', sans-serif;
 }
 
 .hotness h2 {
@@ -180,8 +189,8 @@ h2.game-name {
 }
 
 .group h3 {
-  font-weight: 600;
-  text-decoration: underline;
+  text-decoration: none;
+  font-family: 'Montserrat Subrayada', sans-serif;
 }
 
 .group ul {
@@ -191,7 +200,7 @@ h2.game-name {
   flex-wrap: wrap;
 }
 
-.group ul li, .trait {
+.group li, .trait {
   margin: 2px;
   padding: 2px;
   border-radius: 5px;
@@ -199,8 +208,44 @@ h2.game-name {
   box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.3);
 }
 
+.expansions li, .families li {
+  box-shadow: 2px 2px 5px 0px rgba(26, 36, 176, 0.3);
+}
+
+.expansions li:hover, .families li:hover {
+  background-color: rgba(26, 36, 176);
+  box-shadow: 10px 10px 8px #888888;
+}
+
+.expansions li:hover a, .families li:hover a {
+  color: white;
+}
+
 .trait {
   margin: .5eem;
+}
+
+a {
+  font-family: 'Montserrat Subrayada', sans-serif;
+  text-decoration: none;
+  color: rgba(26, 36, 176);
+}
+
+a:hover, button:hover {
+  color: black;
+  cursor: pointer;
+}
+
+a.expansion:hover, a.family:hover {
+  color: white;
+}
+
+a.link-no-style {
+  color: black;
+}
+
+a.the-hotness {
+  font-family: 'Roboto', sans-serif;
 }
 
 .left-float {
@@ -225,11 +270,6 @@ h2.game-name {
 
 .results-item:nth-child(even) {
   background-color: rgba(128, 128, 128, 0.25);
-}
-
-a:link {
-  font-family: 'Montserrat Subrayada', sans-serif;
-  text-decoration: none;
 }
 
 .hidden, .medium {
@@ -288,7 +328,7 @@ a:link {
     flex-direction: column;
   }
 
-  .pic-and-stats {
+  .pic-and-stats img {
     order: 2;
   }
 
@@ -298,6 +338,23 @@ a:link {
 
   .age-playtime-players {
     order: 3;
+  }
+
+  .flex-large {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+}
+
+@media screen and (min-width: 1000px) {
+
+  .results {
+    max-width: 900px;
+    margin: 0 auto;
   }
 
 }
