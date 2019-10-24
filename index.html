@@ -7,52 +7,69 @@
     <title>Game Hub</title>
     <link rel="stylesheet" type="text/css" href="reset.css">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Mansalva|Bungee+Shade|Montserrat+Subrayada:700|Permanent+Marker|Roboto+Slab:700|Roboto&display=swap" rel="stylesheet">
     <link rel="shortcut icon" href="images/portfolio-favicon.ico">
     <script src="https://kit.fontawesome.com/baf761b7d4.js"></script>
 </head>
 <body>
     <nav> </nav>
     <main>
-        <header>
-            <h1>Game Hub</h1>
-        </header>
 
-        <section class="Search">
-            <h2 class="hidden">Search</h2>
-            <form action="submit">
-                <label for="game-input">Game</label>
-                <input type="text" id="game-input" placeholder="Scythe" required>
-                <button type="submit"><i class="fas fa-search"></i></button>
-            </form>
-        </section>
+        <div class="linen-background">
+            <section class="search">
+                <header>
+                    <h1>Game Hub</h1>
+                </header>
+                <form action="submit">
+                    <h2 class="meduim hidden">Game Hub</h2>
+                    <label for="game-input">Game</label>
+                    <input class="search-bar-input" type="text" id="game-input" placeholder="example: Risk" required>
+                    <div class="buttons inline-block">
+                        <button class="search-button" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <div class="view-the-hotness inline-block hidden">The Hotness</div>
+                    </div>
+                </form>
+            </section>
+
+            <section class="hotness">
+                <h2>The Hotness:</h2>
+                <ul class="hotness-list"></ul>
+            </section>
+
+            <section class="links hidden">
+                <h2 class="hidden">Links</h2>
+                <span class="fa-stack fa-2x">
+                    <i class="far fa-square fa-stack-2x"></i>
+                    <i class="fas fa-child fa-stack-1x"></i>
+                    <span class="below"></span>
+                </span>
+                <span class="fa-stack fa-2x">
+                    <i class="far fa-square fa-stack-2x"></i>
+                    <i class="fas fa-hourglass-half fa-stack-1x"></i>
+                    <span class="below"></span>
+                </span>
+                <span class="fa-stack fa-2x">
+                    <i class="far fa-square fa-stack-2x"></i>
+                    <i class="fas fa-users fa-stack-1x"></i>
+                    <span class="below"></span>
+                </span>
+            </section>
+        </div>
 
         <section class="results hidden">
             <h2 class="hidden">Results</h2>
             <ul></ul>
         </section>
-
-        <section class="links">
-            <h2 class="hidden">Links</h2>
-            <span class="fa-stack fa-2x">
-                <i class="far fa-square fa-stack-2x"></i>
-                <i class="fas fa-child fa-stack-1x"></i>
-                <span class="below"></span>
-            </span>
-            <span class="fa-stack fa-2x">
-                <i class="far fa-square fa-stack-2x"></i>
-                <i class="fas fa-hourglass-half fa-stack-1x"></i>
-                <span class="below"></span>
-            </span>
-            <span class="fa-stack fa-2x">
-                <i class="far fa-square fa-stack-2x"></i>
-                <i class="fas fa-users fa-stack-1x"></i>
-                <span class="below"></span>
-            </span>
-        </section>
             
     </main>
-    <footer> </footer>
+
+    <div class="spinner-div hidden">
+        <i class="fas fa-spinner fa-pulse"></i>
+    </div>
+
+    <footer class="hidden"> </footer>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>  
     <script src="script.js"></script>
 </body>

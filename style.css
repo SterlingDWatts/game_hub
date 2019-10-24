@@ -5,33 +5,103 @@ html {
 *, *::before, *::after {
   box-sizing: inherit;
 }
+
+html, body, main {
+  height: 100%;
+}
+
+.linen-background {
+  min-height: 100%;
+}
   
 body {
   font-family: "Roboto", sans-serif; 
   font-size: 16px;
   font-weight: 200;
-  color: #444;
   text-align: center;
   line-height: 1.5;
+  background-image: url(images/felt.jpg);
+  background-size: cover;
+}
+
+main {
+  padding: 1em;
 }
   
 nav, footer {
   padding: .5em 0;
-  background-color: #aaa;
+  line-height: 1;
 }
-  
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+.linen-background {
+  background-image: url(images/linen-background.jpg);
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  box-shadow: 10px 10px 8px #888888;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 header {
-  padding: 12% 0;
+  padding: 6% 0 0;
+  font-family: 'Permanent Marker', cursive;
+  font-size: 3em;
+  line-height: 1;
 }
   
 section {
-  min-height: 200px;
-  padding: 6% 0;
-  background-color: #bbb;
+  padding: 6% 0 0;
 }
-  
-section:nth-child(even) {
-  background-color: #ddd;
+
+form {
+  font-weight: 200;
+  padding: 1em;
+  font-size: 18px;
+}
+
+.search-bar-input {
+  border-style: inset;
+  border-color: rgb(230, 222, 222);
+  border-width: 2px;
+  border-radius: 5px;
+  line-height: 1;
+  padding: 2px;
+  margin-bottom: 5px;
+  background-image: url(images/cardboard-textures-11.jpg);
+  background-size: cover;
+  width: 55%;
+  font-size: 18px;
+}
+
+button, .view-the-hotness {
+  background-color: rgb(222, 215, 187);
+}
+
+input {
+  background: none;
+  border: none;
+}
+
+button, .view-the-hotness {
+  border-style: outset;
+  border-width: 2px;
+  border-color: rgb(230, 222, 222);
+  border-radius: 5px;
+  height: 24px;
+  font-size: 1em;
+  font-family: "Roboto", sans-serif;
+  padding: 1px 6px;
+  line-height: 1em;
 }
 
 .below {
@@ -39,16 +109,201 @@ section:nth-child(even) {
   top: 1.5em;
 }
 
-.results {
-  padding: 1em;
+.results-item, .hotness-list-item {
+  padding: 0 1em .5em;
+  align-items: center;
+}
+
+.initial-height {
+  min-height: 0;
+  height: initial;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.spinner-div {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(128, 128, 128, 0.5);
+  color: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.one-point-five-em {
+  font-size: 1.5em;
+}
+
+.small-padding {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.hotness-list-item, .results-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+ul div {
+  text-align: center;
+  width: 78%;
+}
+
+.stats, .age-playtime-players {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.left-justified {
   text-align: left;
 }
 
-.results-item {
-  padding: 1em;
-  border-bottom: 1px solid black;
+h2.game-name {
+  font-size: 3em;
 }
 
-.hidden {
+.hotness h2 {
+  font-size: 1.5em;
+  font-family: 'Montserrat Subrayada', sans-serif;
+}
+
+.group {
+  margin-bottom: 1em;
+}
+
+.group h3 {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.group ul {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.group ul li, .trait {
+  margin: 2px;
+  padding: 2px;
+  border-radius: 5px;
+  background-color: rgb(222, 215, 187);
+  box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.3);
+}
+
+.trait {
+  margin: .5eem;
+}
+
+.left-float {
+  float: left;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.results ul img:hover {
+  cursor: pointer;
+}
+
+.hotness-list-item, .results-item {
+  font-size: 18px;
+}
+
+.hotness-list-item a, .results-item a {
+  font-weight: 600;
+}
+
+.results-item:nth-child(even) {
+  background-color: rgba(128, 128, 128, 0.25);
+}
+
+a:link {
+  font-family: 'Montserrat Subrayada', sans-serif;
+  text-decoration: none;
+}
+
+.hidden, .medium {
   display: none;
 }
+
+
+
+@media screen and (min-width: 600px) {
+  
+  .small {
+    display: none;
+  }
+
+  .medium {
+    display: initial;
+  }
+
+  form {
+    display: flex;
+    justify-content: center;
+  }
+
+  input {
+    margin: 0 1em;
+  }
+
+  .pic-and-stats {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .hotness-list-item {
+    width: 50%;
+    padding: .5em 1em;
+  }
+
+  .hotness ul {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .hotness h2 {
+    font-size: 2em;
+  }
+
+  header {
+    padding: 6% 0;
+  }
+
+  .stats, .age-playtime-players {
+    flex-direction: column;
+  }
+
+  .pic-and-stats {
+    order: 2;
+  }
+
+  .stats {
+    order: 1;
+  }
+
+  .age-playtime-players {
+    order: 3;
+  }
+
+}
+
+/*
+
+
+
+*/

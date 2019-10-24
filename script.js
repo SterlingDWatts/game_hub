@@ -3,7 +3,10 @@
 const ATLAS_SEARCH_URL = 'https://www.boardgameatlas.com/api';
 const ATLAS_CLIENT_ID = 'client_id=wGoq3sNRE5';
 const BGG_SEARCH_URL = 'https://www.boardgamegeek.com/xmlapi2';
+const $hotness = $('.hotness');
+const $viewTheHotness = $('.view-the-hotness');
 const $results = $('.results');
+const $spinner = $('.spinner-div');
 
 function toXMLDoc(responseText) {
     // convert text to XML Doc
@@ -13,145 +16,104 @@ function toXMLDoc(responseText) {
     return xmlDoc;
 }
 
-function makeIdsCSV(xmlDoc) {
-    // iterate over items in Doc, extract IDS, join them into one long string
-
-    const gamesXML = xmlDoc.getElementsByTagName('item');
+function displayTheHotness(responseText) {
+    // use text from fetch to populate the top ten hottest games
     
-    const idsArray = [];
-    for (let i = 0; i < gamesXML.length; i++) {
-        idsArray.push(gamesXML[i].getAttribute('id'));
-    }
-    return idsArray.join();
-}
-
-function sortByPopularity(gamesXML) {
-    const games = [];
-    const seen = [];
-
-    for (let i = 0; i < gamesXML.length; i++) {
-        const id = gamesXML[i].getAttribute('id');
-        if (!seen.includes(id)) {
-            seen.push(id);
-            games.push({
-                index: i,
-                numOfRatings: gamesXML[i].getElementsByTagName('usersrated')[0].getAttribute('value')
-            })
-        } 
-    }
-
-    games.sort((a, b) => b.numOfRatings - a.numOfRatings);
-    return games;
-}
-
-function displaySearchResults(responseText) {
-    // make xml doc of response, loop through games
-
     const xmlDoc = toXMLDoc(responseText);
     const games = xmlDoc.getElementsByTagName('item');
 
-    const orderByPopularity = sortByPopularity(games);
+    for (let i = 0; i < 10; i++) {
+        const name = games[i].getElementsByTagName('name')[0].getAttribute('value');
+        const thumb = games[i].getElementsByTagName('thumbnail')[0].getAttribute('value');
+        const rank = i + 1;
+        const id = games[i].getAttribute('id');
+        const yearPublished = games[i].getElementsByTagName('yearpublished')[0].getAttribute('value');
 
-    $results.html('<ul></ul>');
-
-    for (let i = 0; i < orderByPopularity.length; i++) {
-        try {
-            const index = orderByPopularity[i].index;
-            const name = games[index].getElementsByTagName('name')[0].getAttribute('value');
-            const thumb = games[index].getElementsByTagName('thumbnail')[0].innerHTML;
-            const aveRating = games[index].getElementsByTagName('average')[0].getAttribute('value');
-            const id = games[index].getAttribute('id');
-            $('.results ul').append(
-                `<li class="results-item">
-                    <img src='${thumb}' height='75' alt='${name} box artwork'>
-                    <a href='' class='game' data-id='${id}'>${name}</a>
+        $('.hotness-list').append(
+            `<li class='hotness-list-item' data-id='${id}'>
+                <img class='hotness-thumb left-float' src='${thumb}' width='80' alt='${name} box artwork'>
+                <div>
+                    <a href='' class='game'>
+                        ${name}<span class='medium'> | ${yearPublished}</span>
+                    </a>
                     <br>
-                    <span>Average Rating: ${aveRating}</span>
-                </li>`
-            );
-        }
-        catch {
-            console.log(`No box art on game # ${i + 1}`)
-        }
+                    <span class='small'>${yearPublished} | </span><span>Rank: ${rank}</span>
+                </div>
+            </li>`
+        )
     }
-
-    $results.removeClass('hidden');
-    $('.links').addClass('hidden');
 }
 
-function getSearchResultsFromCsvOfIds(csvOfIds) {
-    // use fetch to get search results from ids from Board Game Geek
+function fetchTheHotness() {
+    // fetch the top ten hottest items on Board Game Geek
 
-    const url = BGG_SEARCH_URL + '/thing?id=' + csvOfIds + '&stats=1';
+    let url = BGG_SEARCH_URL + '/hot?TYPE=boardgame'
 
     fetch(url)
         .then(response => {
             if (response.ok) {
                 return response.text();
             }
-            throw new Error(response.statusText)
+            throw new Error(response.statusText);
         })
-        .then(responseText => displaySearchResults(responseText))
+        .then(responseText => {
+            displayTheHotness(responseText);
+        })
         .catch(e => console.log(e))
 }
 
-function responseTextToCsvOfIds(responseText) {
-    const xmlDoc = toXMLDoc(responseText);
-    return makeIdsCSV(xmlDoc); 
-}
-
-function getSearchIds(searchTerm) {
-    // use fetch to get ids of search results from Board Game Geek
-
-    const url = BGG_SEARCH_URL + '/search?query=' + encodeURIComponent(searchTerm) + '&type=boardgame,boardgameexpansion'
-
-    fetch(url)
-        .then(response => {
-            if (response.ok) {
-                return response.text();
-            }
-            throw new Error(response.statusText)
-        })
-        .then(responseText => getSearchResultsFromCsvOfIds(responseTextToCsvOfIds(responseText)))
-        .catch(err => console.log(err))
-}
-
-function handleSubmitSearch() {
-    // listen for submit and run function for search
-
-    $('form').on('submit', function(e) {
-        e.preventDefault();
-        const searchTerm = $('input').val().toLowerCase();
-        getSearchIds(searchTerm);
-    })
-}
-
-function arrayToLiHtmlString(anArray) {
-    //
-
-    return '<li>' + anArray.join('</li><li>') + '</li>';
+function shrinkTheSearchArea() {
+    $('header').addClass('one-point-five-em');
+    $('form, .search').addClass('small-padding');
+    $viewTheHotness.removeClass('hidden');
+    $hotness.addClass('hidden');
+    $('.buttons').removeClass('inline-block');
+    $('button').html('Search')
+    $('.search, .linen-background').addClass('initial-height');
+    $('header').addClass('no-padding');
+    $('label').addClass('hidden');
 }
 
 function displayGameInfo(game) {
     //  clear the results, build html for game info and populate it with arguments passed in
 
+    shrinkTheSearchArea();
     $results.empty();
     $results.append(
-        `<h2>${game.name}</h2>
-        <img src='${game.picture}' height='200'>
-        <p>Overall Rank: ${game.rank} | Average Rating: ${game.average} | Out of ${game.usersRated} ratings</p>
-        <p>Age: ${game.minAge}+ | Playtime: ${game.playingTime} minutes | Number of Players: ${game.minPlayers}-${game.maxPlayers}</p>
+        `<h2 class='game-name'>${game.name}</h2>
+        <div class='pic-and-stats'>
+            <img src='${game.picture}' height='200'>
+            <div class='stats'>
+                <div class='trait'>${game.usersRated} Ratings</div>
+                <div class='trait'>Rank: ${game.rank}</div>
+                <div class='trait'>Rating: ${parseFloat(game.average).toFixed(1)}</div>
+            </div>
+            <div class='age-playtime-players'>
+                <div class='trait'>Age: ${game.minAge}+</div>
+                <div class='trait'>${game.minPlaytime}-${game.maxPlaytime} Mins</div>
+                <div class='trait'>${game.minPlayers}-${game.maxPlayers} Players</div>
+            </div>
+        </div>
         <br>
-        <p>${game.description}</p>
-        <br>
-        <h3>Categories</h3>
-        <ul class='categories'>${arrayToLiHtmlString(game.categories)}</ul>
-        <h3>Mechanics</h3>
-        <ul class='mechanics'>${arrayToLiHtmlString(game.mechanics)}</ul>
-        <h3>Families</h3>
-        <ul class='families'></ul>
-        <h3>Expansions</h3>
-        <ul class='expansions'></ul>`
+        <p class='left-justified'>${game.description}</p>
+        <div class='groups'>
+            <div class='categories-div group'>
+                <h3>Categories</h3>
+                <ul class='categories'>${arrayToLiHtmlString(game.categories)}</ul>
+            </div>
+            <div class='mechanics-div group'>
+                <h3>Mechanics</h3>
+                <ul class='mechanics'>${arrayToLiHtmlString(game.mechanics)}</ul>
+            </div>
+            <div class='families-div group'>
+                <h3>Families</h3>
+                <ul class='families'></ul>
+            </div>
+            <div class='expansions-div group'>
+                <h3>Expansions</h3>
+                <ul class='expansions'></ul>
+            </div>
+        </div>`
     )
     for (let i = 0; i < game.families.length; i++) {
         $('.families').append(
@@ -171,6 +133,8 @@ function displayGameInfo(game) {
             </li>`
         );
     }
+    window.scrollTo(0,0);
+    $results.removeClass('hidden');
 }
 
 function setGameObject(gameObj, gameXML) {
@@ -239,10 +203,153 @@ function getGameInfo(id) {
         .catch(e => console.log(e))
 }
 
+function handleClickHotnessGame() {
+    //
+
+    $hotness.on('click', '.hotness-list-item', function(e) {
+        e.preventDefault();
+        getGameInfo($(this).attr('data-id'));
+    })
+}
+
+function makeIdsCSV(xmlDoc) {
+    // iterate over items in Doc, extract IDS, join them into one long string
+
+    const gamesXML = xmlDoc.getElementsByTagName('item');
+    
+    const idsArray = [];
+    for (let i = 0; i < gamesXML.length; i++) {
+        idsArray.push(gamesXML[i].getAttribute('id'));
+    }
+    return idsArray.join();
+}
+
+function sortByPopularity(gamesXML) {
+    const games = [];
+    const seen = [];
+
+    for (let i = 0; i < gamesXML.length; i++) {
+        const id = gamesXML[i].getAttribute('id');
+        if (!seen.includes(id)) {
+            seen.push(id);
+            games.push({
+                index: i,
+                numOfRatings: gamesXML[i].getElementsByTagName('usersrated')[0].getAttribute('value')
+            })
+        } 
+    }
+
+    games.sort((a, b) => b.numOfRatings - a.numOfRatings);
+    return games;
+}
+
+
+function displaySearchResults(responseText) {
+    // make xml doc of response, loop through games
+
+    const xmlDoc = toXMLDoc(responseText);
+    const games = xmlDoc.getElementsByTagName('item');
+
+    const orderByPopularity = sortByPopularity(games);
+
+    $spinner.addClass('hidden');
+    $results.html('<ul></ul>');
+
+    for (let i = 0; i < orderByPopularity.length; i++) {
+        try {
+            const index = orderByPopularity[i].index;
+            const name = games[index].getElementsByTagName('name')[0].getAttribute('value');
+            const thumb = games[index].getElementsByTagName('thumbnail')[0].innerHTML;
+            const aveRating = parseFloat(games[index].getElementsByTagName('average')[0].getAttribute('value')).toFixed(2);
+            const id = games[index].getAttribute('id');
+            $('.results ul').append(
+                `<li class='results-item' data-id='${id}'>
+                    <img src='${thumb}'  width='80' alt='${name} box artwork'>
+                    <div>
+                        <a href='' class='game'>
+                            ${name}
+                        </a>
+                        <br>
+                        <span>Rating: ${aveRating}</span>
+                    </div>
+                </li>`
+            );
+        }
+        catch {
+            console.log(`No box art on game # ${i + 1}`)
+        }
+    }
+
+    $('.hotness h2, .hotness ul').addClass('hidden');
+    shrinkTheSearchArea();
+    $results.removeClass('hidden');
+    window.scrollTo(0,0);
+}
+
+function getSearchResultsFromCsvOfIds(csvOfIds) {
+    // use fetch to get search results from ids from Board Game Geek
+
+    const url = BGG_SEARCH_URL + '/thing?id=' + csvOfIds + '&stats=1';
+
+    fetch(url)
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            }
+            throw new Error(response.statusText)
+        })
+        .then(responseText => displaySearchResults(responseText))
+        .catch(e => {
+            $spinner.addClass('hidden')
+        })
+}
+
+function responseTextToCsvOfIds(responseText) {
+    const xmlDoc = toXMLDoc(responseText);
+    return makeIdsCSV(xmlDoc); 
+}
+
+function getSearchIds(searchTerm) {
+    // use fetch to get ids of search results from Board Game Geek
+
+    const url = BGG_SEARCH_URL + '/search?query=' + encodeURIComponent(searchTerm) + '&type=boardgame,boardgameexpansion'
+
+    $spinner.css('top', '0')
+    $spinner.removeClass('hidden');
+
+    fetch(url)
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            }
+            throw new Error(response.statusText)
+        })
+        .then(responseText => getSearchResultsFromCsvOfIds(responseTextToCsvOfIds(responseText)))
+        .catch(err => {
+            $spinner.addClass('hidden');
+        })
+}
+
+function handleSubmitSearch() {
+    // listen for submit and run function for search
+
+    $('form').on('submit', function(e) {
+        e.preventDefault();
+        const searchTerm = $('input').val().toLowerCase();
+        getSearchIds(searchTerm);
+    })
+}
+
+function arrayToLiHtmlString(anArray) {
+    //
+
+    return '<li>' + anArray.join('</li><li>') + '</li>';
+}
+
 function handleClickGame() {
     // listen for click on game and run functions to display info about game
 
-    $results.on('click', '.game', function(e) {
+    $results.on('click', '.results-item', function(e) {
         e.preventDefault();
         getGameInfo($(this).attr('data-id'));
     })
@@ -267,7 +374,9 @@ function displayFamilyResults(responseText, family, description) {
 
     const orderByPopularity = sortByPopularity(games);
 
-    $('.results').html(
+    $spinner.addClass('hidden');
+
+    $results.html(
         `<h2>${family}</h2>
         <p>${description}</p>
         <ul></ul>`
@@ -281,9 +390,9 @@ function displayFamilyResults(responseText, family, description) {
             const aveRating = games[index].getElementsByTagName('average')[0].getAttribute('value');
             const id = games[index].getAttribute('id');
             $('.results ul').append(
-                `<li class="results-item">
+                `<li class="results-item" data-id='${id}'>
                     <img src='${thumb}' height='75' alt='${name} box artwork'>
-                    <a href='' class='game' data-id='${id}'>${name}</a>
+                    <a href='' class='game'>${name}</a>
                     <br>
                     <span>Average Rating: ${aveRating}</span>
                 </li>`
@@ -293,6 +402,38 @@ function displayFamilyResults(responseText, family, description) {
             console.log(`No box art on game # ${i + 1}`);
         }
     }
+    window.scrollTo(0,0);
+}
+
+function displayWithoutPictures(responseText, family, description) {
+    //
+
+    const xmlDoc = toXMLDoc(responseText);
+    const games = xmlDoc.getElementsByTagName('link');
+
+    $spinner.addClass('hidden')
+
+    $results.html(
+        `<h2>${family}</h2>
+        <p>${description}</p>
+        <ul></ul>`
+    );
+
+    for (let i = 0; i < games.length; i++) {
+        try {
+            const name = games[i].getAttribute('value');
+            const id = games[i].getAttribute('id');
+            $('.results ul').append(
+                `<li class='results-item' data-id='${id}'>
+                    <a href='' class='game'>${name}</a>
+                </li>`
+            );
+        }
+        catch {
+            console.log(`No box art on game # ${i + 1}`);
+        }
+    }
+    window.scrollTo(0,0);
 }
 
 function getFamilyIds(responseText) {
@@ -314,13 +455,17 @@ function getFamilyIds(responseText) {
             throw new Error(response.statusText)
         })
         .then(responseText => displayFamilyResults(responseText, family, description))
-        .catch(e => console.log(e))
+        .catch(e => displayWithoutPictures(responseText, family, description))
 }
 
 function getFamilies(id) {
     // 
 
     const url = BGG_SEARCH_URL + '/family?id=' + id;
+    console.log(`fetching family: ${id} from ${url}`)
+
+    $spinner.removeClass('hidden');
+    $spinner.css('top', window.pageYOffset)
 
     fetch(url)
         .then(response => {
@@ -330,7 +475,10 @@ function getFamilies(id) {
             throw new Error(response.statusText)
         })
         .then(responseText => getFamilyIds(responseText))
-        .catch(e => console.log(e))
+        .catch(e => {
+            console.log(e);
+            $spinner.addClass('hidden');
+        })
 
 }
 
@@ -344,8 +492,10 @@ function handleClickFamily() {
 }
 
 function loadStartFunctions() {
-    // run event listeners
+    // run event listeners and starting functions
 
+    fetchTheHotness();
+    handleClickHotnessGame();
     handleSubmitSearch();
     handleClickGame();
     handleClickFamily();
