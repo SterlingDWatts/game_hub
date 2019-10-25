@@ -6,13 +6,13 @@ Game Hub allows users to search for a specific board game or select from an ever
 
 ## Screenshots ##
 
-Landing Page:  
+**Landing Page:**  
 ![Landing Page](https://sterlingdwatts.github.io/game_hub/screenshots/game-hub-desktop-landing-page.png)  
 
-Results:  
+**Results:**  
 ![Landing Page](https://sterlingdwatts.github.io/game_hub/screenshots/game-hub-desktop-results.png)  
 
-Game Info:  
+**Game Info:**  
 ![Landing Page](https://sterlingdwatts.github.io/game_hub/screenshots/game-hub-desktop-game-info.png)  
 
 ## Technology ##
