@@ -497,7 +497,6 @@ function getFamilies(id) {
         })
         .then(responseText => getFamilyIds(responseText))
         .catch(e => {
-            console.log(e);
             $spinner.addClass('hidden');
         })
 
@@ -598,5 +597,4 @@ if(api1.author === result.author) {
 }
 
 result.score = score;
-
 */
