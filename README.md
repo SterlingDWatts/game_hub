@@ -20,3 +20,6 @@ Game Info:
 * JavaScript/Jquery
 * XML
 * [Board Game Geek API2](https://boardgamegeek.com/wiki/page/BGG_XML_API2)
+
+## Demo ## 
+[Game Hub](https://sterlingdwatts.github.io/game_hub/)
